@@ -1,4 +1,5 @@
-require "active_record"
+#require "active_record"
+require "concern"
 
 AUTHLOGIC_PATH = File.dirname(__FILE__) + "/authlogic/"
 
@@ -14,9 +15,16 @@ AUTHLOGIC_PATH = File.dirname(__FILE__) + "/authlogic/"
  "crypto_providers/sha256",
  "crypto_providers/sha512",
  "crypto_providers/bcrypt",
- "crypto_providers/aes256",
- 
- "authenticates_many/base",
+ "crypto_providers/aes256"
+].each do |library|
+   require AUTHLOGIC_PATH + library
+ end
+
+require AUTHLOGIC_PATH + "orm/active_record" if defined?( ActiveRecord )
+require AUTHLOGIC_PATH + "orm/mongo_mapper" if defined?( MongoMapper )
+
+
+["authenticates_many/base",
  "authenticates_many/association",
  
  "acts_as_authentic/email",
@@ -62,3 +70,6 @@ AUTHLOGIC_PATH = File.dirname(__FILE__) + "/authlogic/"
 require AUTHLOGIC_PATH + "controller_adapters/rails_adapter"   if defined?( Rails   )
 require AUTHLOGIC_PATH + "controller_adapters/merb_adapter"    if defined?( Merb    )
 require AUTHLOGIC_PATH + "controller_adapters/sinatra_adapter" if defined?( Sinatra )
+
+ActiveRecord::Base.send :include, Authlogic::ActsAsAuthentic::Base if defined?( ActiveRecord )
+#MongoMapper::Document.send :include, Authlogic::ActsAsAuthentic::Base if defined?( MongoMapper )

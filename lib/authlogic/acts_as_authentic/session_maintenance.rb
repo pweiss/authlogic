@@ -68,13 +68,8 @@ module Authlogic
         end
         
         # Save the record and skip session maintenance all together.
-        def save_without_session_maintenance(*args)
-          self.skip_session_maintenance = true
-          result = save(*args)
-          self.skip_session_maintenance = false
-          result
-        end
-        
+        include Authlogic::Orm::ActsAsAuthentic::SessionMaintenance
+               
         private
           def skip_session_maintenance=(value)
             @skip_session_maintenance = value

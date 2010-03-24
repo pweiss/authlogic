@@ -113,14 +113,7 @@ module Authlogic
           end
         end
         
-        private
-          def find_with_case(field, value, sensitivity = true)
-            if sensitivity
-              send("find_by_#{field}", value)
-            else
-              first(:conditions => ["LOWER(#{quoted_table_name}.#{field}) = ?", value.mb_chars.downcase])
-            end
-          end
+        include Authlogic::Orm::ActsAsAuthentic::Login 
       end
       
       # All methods relating to the login field

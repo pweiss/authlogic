@@ -13,15 +13,8 @@ module Authlogic
       #         errors.add(:base, "You must be awesome to log in") unless attempted_record.awesome?
       #       end
       #   end
-      class Errors < (defined?(::ActiveModel) ? ::ActiveModel::Errors : ::ActiveRecord::Errors)
-        unless defined?(::ActiveModel)
-          def [](key)
-            value = super
-            value.is_a?(Array) ? value : [value].compact
-          end
-        end
-      end
-      
+      include Authlogic::Orm::Session::Validation
+
       # You should use this as a place holder for any records that you find during validation. The main reason for this is to
       # allow other modules to use it if needed. Take the failed_login_count feature, it needs this in order to increase
       # the failed login count.

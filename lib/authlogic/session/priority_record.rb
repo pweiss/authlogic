@@ -13,12 +13,8 @@ module Authlogic
       # Setting priority record if it is passed. The only way it can be passed is through an array:
       #
       #   session.credentials = [real_user_object, priority_user_object]
-      def credentials=(value)
-        super
-        values = value.is_a?(Array) ? value : [value]
-        self.priority_record = values[1] if values[1].class < ::ActiveRecord::Base
-      end
-      
+      include Authlogic::Orm::Session::PriorityRecord     
+
       private
         def attempted_record=(value)
           value = priority_record if value == priority_record

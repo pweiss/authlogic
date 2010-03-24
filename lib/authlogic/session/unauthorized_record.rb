@@ -31,12 +31,8 @@ module Authlogic
       end
       
       # Setting the unauthorized record if it exists in the credentials passed.
-      def credentials=(value)
-        super
-        values = value.is_a?(Array) ? value : [value]
-        self.unauthorized_record = values.first if values.first.class < ::ActiveRecord::Base
-      end
-      
+      include Authlogic::Orm::Session::UnauthorizedRecord     
+
       private
         def authenticating_with_unauthorized_record?
           !unauthorized_record.nil?

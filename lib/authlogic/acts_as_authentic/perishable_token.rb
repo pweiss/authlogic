@@ -60,25 +60,11 @@ module Authlogic
           # If you want to use a different timeout value, just pass it as the second parameter:
           #
           #   User.find_using_perishable_token(token, 1.hour)
-          def find_using_perishable_token(token, age = self.perishable_token_valid_for)
-            return if token.blank?
-            age = age.to_i
-            
-            conditions_sql = "perishable_token = ?"
-            conditions_subs = [token]
-            
-            if column_names.include?("updated_at") && age > 0
-              conditions_sql += " and updated_at > ?"
-              conditions_subs << age.seconds.ago
-            end
-            
-            find(:first, :conditions => [conditions_sql, *conditions_subs])
-          end
           
+          # and
+
           # This method will raise ActiveRecord::NotFound if no record is found.
-          def find_using_perishable_token!(token, age = perishable_token_valid_for)
-            find_using_perishable_token(token, age) || raise(ActiveRecord::RecordNotFound)
-          end
+          include Authlogic::Orm::ActsAsAuthentic::PerishableToken
         end
         
         # Instance level methods for the perishable token.
